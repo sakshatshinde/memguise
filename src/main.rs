@@ -34,6 +34,19 @@ fn main() {
     }
 }
 
+fn core_to_core_latency() {
+    !todo!()
+}
+
+fn get_amd_gpu_info() {
+    !todo!()
+    // ! machine_info: https://docs.rs/machine-info/latest/machine_info/
+}
+
+fn get_data_bandwidth_ram_gpu() {
+    !todo()
+    // ! ufe_abe: https://lib.rs/crates/ufe_abe
+}
 // * https://www.reddit.com/r/windows/comments/10p6ea0/can_i_have_some_help_understanding_memory_values/
 /* Private bytes is the amount of memory the program has asked for that it doesn't share with any other programs. This doesn't include shared memory, which can be significant -- especially for web browsers, which run as multiple programs combined into one UI.
 
