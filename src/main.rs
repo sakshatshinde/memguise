@@ -3,6 +3,7 @@ use std::{thread, time::Duration};
 use sysinfo::{CpuRefreshKind, ProcessExt, ProcessRefreshKind, RefreshKind, System, SystemExt};
 
 fn main() {
+    // ? Creating a global system
     let mut sys = System::new_with_specifics(
         RefreshKind::new()
             .with_memory()
@@ -10,9 +11,14 @@ fn main() {
             .with_processes(ProcessRefreshKind::everything()),
     );
 
-    // ! For some reason task manager is showing a wild difference, but process explorer has +-1MB difference
     loop {
-        sys.refresh_all();
+        // ? Only refreshing what we requested
+        sys.refresh_specifics(
+            RefreshKind::new()
+                .with_memory()
+                .with_cpu(CpuRefreshKind::everything())
+                .with_processes(ProcessRefreshKind::everything()),
+        );
 
         for process in sys.processes_by_exact_name("qbittorrent.exe") {
             println!(
