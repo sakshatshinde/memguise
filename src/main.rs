@@ -27,3 +27,11 @@ fn main() {
         thread::sleep(Duration::from_millis(4000));
     }
 }
+
+// * https://www.reddit.com/r/windows/comments/10p6ea0/can_i_have_some_help_understanding_memory_values/
+/* Private bytes is the amount of memory the program has asked for that it doesn't share with any other programs. This doesn't include shared memory, which can be significant -- especially for web browsers, which run as multiple programs combined into one UI.
+
+Working set is the amount of private memory that the OS has currently assigned to the program. If the program has allocated some memory but hasn't touched it in a while, Windows can swap it out of the working set and to disk to free up memory for other programs. If you're short on memory and the system is swapping, the working set matters more than the private size since the working set shows you which program is elbowing others out of RAM.
+
+The Processes tab of Task Manager shows private working set for each program, but the total at the top includes private working sets and shared memory. Shared memory doesn't have a line item and thus confusingly the line items don't add up to the total. The Details tab should show you a lot of the same data as Process Explorer if you enable the columns, though perhaps with different names.
+ */
