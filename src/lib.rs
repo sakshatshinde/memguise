@@ -1,4 +1,5 @@
 use human_bytes::human_bytes;
+use rayon::prelude::*;
 use sysinfo::{
     CpuRefreshKind, PidExt, ProcessExt, ProcessRefreshKind, RefreshKind, System, SystemExt,
 };
@@ -7,36 +8,38 @@ use sysinfo::{
 /// ### Arguments
 /// * `processes` - A list containing the exact name of the processes
 pub fn get_multi_process_info(processes: Vec<&str>) -> Vec<Vec<ProcessInfo>> {
-    // ? Creating sub global system because maybe if I spawn threads, I want to them to share
-    // ? same parent, IDK what i am thinking but its probably right...
+    let multi_process_info = processes
+        .par_chunks(8) // * chunk size 8 seems to give the best performance
+        .map_init(
+            || {
+                // * spawning a System per thread, rayon will take care of spawning threads
+                System::new_with_specifics(
+                    RefreshKind::new()
+                        .with_memory()
+                        .with_cpu(CpuRefreshKind::everything())
+                        .with_processes(ProcessRefreshKind::everything()),
+                )
+            },
+            |sys, p| {
+                p.iter()
+                    .map(|p| get_process_info(sys, p))
+                    .collect::<Vec<_>>()
+            },
+        )
+        .flatten_iter()
+        .collect();
+
+    return multi_process_info;
+}
+
+pub fn get_multi_process_info_single_t(processes: Vec<&str>) -> Vec<Vec<ProcessInfo>> {
+    let mut multi_process_info = Vec::<Vec<ProcessInfo>>::new();
     let mut sys = System::new_with_specifics(
         RefreshKind::new()
             .with_memory()
             .with_cpu(CpuRefreshKind::everything())
             .with_processes(ProcessRefreshKind::everything()),
     );
-
-    // ! Figure out a way to make this multi threaded
-    // let pool = rayon::ThreadPoolBuilder::new().build().unwrap();
-    // let multi_process_info = Arc::new(Mutex::new(Vec::<Vec<ProcessInfo>>::new()));
-
-    // use rayon::prelude::*;
-    // use std::sync::{Arc, Mutex};
-    // pool.install(|| {
-    //     processes.into_par_iter().for_each(|process| {
-    //         multi_process_info
-    //             .lock()
-    //             .unwrap()
-    //             .push(get_process_info(&mut sys, process));
-    //     })
-    // });
-    //     return Arc::try_unwrap(multi_process_info)
-    //         .unwrap()
-    //         .into_inner()
-    //         .unwrap();
-    // }
-
-    let mut multi_process_info = Vec::<Vec<ProcessInfo>>::new();
 
     for process in processes {
         let each_process_info = get_process_info(&mut sys, process);
