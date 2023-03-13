@@ -16,9 +16,28 @@ pub fn get_multi_process_info(processes: Vec<&str>) -> Vec<Vec<ProcessInfo>> {
             .with_processes(ProcessRefreshKind::everything()),
     );
 
+    // ! Figure out a way to make this multi threaded
+    // let pool = rayon::ThreadPoolBuilder::new().build().unwrap();
+    // let multi_process_info = Arc::new(Mutex::new(Vec::<Vec<ProcessInfo>>::new()));
+
+    // use rayon::prelude::*;
+    // use std::sync::{Arc, Mutex};
+    // pool.install(|| {
+    //     processes.into_par_iter().for_each(|process| {
+    //         multi_process_info
+    //             .lock()
+    //             .unwrap()
+    //             .push(get_process_info(&mut sys, process));
+    //     })
+    // });
+    //     return Arc::try_unwrap(multi_process_info)
+    //         .unwrap()
+    //         .into_inner()
+    //         .unwrap();
+    // }
+
     let mut multi_process_info = Vec::<Vec<ProcessInfo>>::new();
 
-    // ! Figure out a way to make this multi threaded
     for process in processes {
         let each_process_info = get_process_info(&mut sys, process);
         multi_process_info.push(each_process_info);
