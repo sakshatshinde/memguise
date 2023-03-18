@@ -1,5 +1,6 @@
 use human_bytes::human_bytes;
 use rayon::prelude::*;
+use rust_gpu_tools::*;
 use sysinfo::{
     CpuRefreshKind, PidExt, ProcessExt, ProcessRefreshKind, RefreshKind, System, SystemExt,
 };
@@ -90,15 +91,21 @@ pub struct ProcessInfo {
     pub virtual_memory_usage: String,
 }
 
+#[allow(dead_code)]
 fn core_to_core_latency() {
     todo!()
 }
 
-fn get_amd_gpu_info() {
-    todo!()
-    // ! machine_info: https://docs.rs/machine-info/latest/machine_info/
+// ! fatal error LNK1181: cannot open input file 'OpenCL.lib' || some issue in linking? Need to install something i guess?
+pub fn get_gpu_info_broken() {
+    // ! rust_gpu_tools: https://docs.rs/rust-gpu-tools/latest/rust_gpu_tools/opencl/struct.Device.html
+    let devices = Device::all();
+    for device in devices.iter() {
+        println!("Device : {:?}", device);
+    }
 }
 
+#[allow(dead_code)]
 fn get_data_bandwidth_ram_gpu() {
     todo!()
     // ! ufe_abe: https://lib.rs/crates/ufe_abe

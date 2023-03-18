@@ -1,3 +1,4 @@
+use memguise::*;
 fn main() {
-    todo!()
+    get_gpu_info_broken();
 }

@@ -8,7 +8,8 @@ edition = "2021"
 [dependencies]
 human_bytes = { version = "0.4.1", default-features = false}
 rayon = "1.7.0"
-sysinfo = "0.28.2"
+rust-gpu-tools = { version = "0.6.1", default-features = false, features = ["opencl"]}
+sysinfo = "0.28.3"
 
 [dev-dependencies]
 criterion = { version = "0.4", features = ["html_reports"] }
