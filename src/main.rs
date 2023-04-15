@@ -1,4 +1,5 @@
 use memguise::*;
 fn main() {
-    get_gpu_info_broken();
+    let info = get_gpu_memory_info();
+    println!("{:?}", info);
 }

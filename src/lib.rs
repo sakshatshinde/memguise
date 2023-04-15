@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use human_bytes::human_bytes;
 use rayon::prelude::*;
 use rust_gpu_tools::*;
@@ -97,12 +99,24 @@ fn core_to_core_latency() {
 }
 
 // ! fatal error LNK1181: cannot open input file 'OpenCL.lib' || some issue in linking? Need to install something i guess?
-pub fn get_gpu_info_broken() {
-    // ! rust_gpu_tools: https://docs.rs/rust-gpu-tools/latest/rust_gpu_tools/opencl/struct.Device.html
+// * Fixed using https://github.com/PlasmaPower/nano-vanity/issues/16#issuecomment-559009547
+/// Returns a list of all the GPUs in the system
+///
+/// Uses `rust_gpu_tools` https://docs.rs/rust-gpu-tools/latest/rust_gpu_tools/opencl/struct.Device.html
+pub fn get_gpu_info() -> Vec<&'static Device> {
     let devices = Device::all();
-    for device in devices.iter() {
-        println!("Device : {:?}", device);
+    return devices;
+}
+
+pub fn get_gpu_memory_info() -> HashMap<rust_gpu_tools::Vendor, String> {
+    let mut memory_info = HashMap::new();
+
+    let gpus = get_gpu_info();
+    for gpu in gpus {
+        memory_info.insert(gpu.vendor(), human_bytes(gpu.memory() as f64));
     }
+
+    return memory_info;
 }
 
 #[allow(dead_code)]
