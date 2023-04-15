@@ -2,7 +2,7 @@
 ### A simple tool to get info of all the memory in your system
 ---
 
-To run the benchmark use for `get_multi_process_info_single_t` vs `get_multi_process_info`
+To run the benchmark for `get_multi_process_info_single_t` vs `get_multi_process_info`
 
 ```rust
 pub fn get_multi_process_info(processes: Vec<&str>) -> Vec<Vec<ProcessInfo>> {
